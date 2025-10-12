@@ -1,0 +1,214 @@
+body {
+  //   display: flex;
+  //   flex-direction: column;
+  //   justify-content: center;
+  //   align-items: center;
+  //   min-height: 100vh;
+  //   margin: 0;
+  //   background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);
+  //   color: #f0f0f0;
+  //   font-family: "Avenir Next", "Helvetica Neue", Arial, sans-serif;
+  //   padding: 30px;
+}
+
+h1 {
+  color: #fff;
+  margin-bottom: 30px;
+}
+
+/* ---------------------------------- */
+/* 1. 一覧表示セクション */
+/* ---------------------------------- */
+#indexList {
+  width: 90%;
+  max-width: 800px;
+  list-style: none;
+  padding: 0;
+  border: 1px solid #fff;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  background-color: #222;
+}
+
+.index-item {
+  padding: 15px 20px;
+  border-bottom: 1px solid#fff;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.1s;
+  font-size: 1.2em;
+  font-weight: 500;
+  color: #e0e0e0;
+  text-align: left;
+  font-weight: bold;
+}
+
+.index-item:last-child {
+  border-bottom: none;
+}
+
+.index-item:hover {
+  background-color: rgba(255, 215, 0, 0.05);
+  transform: translateY(-2px);
+}
+
+.index-item:active {
+  transform: scale(0.98);
+}
+
+/* ---------------------------------- */
+/* 2. ポップアップ（モーダル）表示 */
+/* ---------------------------------- */
+#modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(23, 25, 76, 1); /* 背景を暗くして強調 */
+  display: none; /* 初期は非表示 */
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: modalFadeIn 0.3s ease-out;
+
+  &__inner {
+    position: absolute;
+
+    height: 100%;
+
+    top: 150px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 1200px;
+  }
+}
+
+#motivationContainerWrap {
+  position: relative;
+
+  @media (max-width: 1000px) {
+  }
+}
+
+#motivationContainer {
+  width: calc(100% - 150px);
+  margin: 0 auto;
+
+  padding: 40px 30px;
+  border: 3px solid#fff;
+  border-radius: 20px;
+  box-shadow: 0 0 40px rgba(255, 215, 0, 0.2), 0 0 15px rgba(0, 0, 0, 0.8);
+  background-color: #222;
+  height: 100%;
+  overflow-y: scroll;
+  position: relative;
+  text-align: left;
+  max-height: calc(100vh - 180px);
+  height: auto;
+
+  box-sizing: border-box;
+}
+
+/* ボタンコンテナ */
+#modalControls {
+  position: absolute;
+  top: 20px;
+  width: calc(100% - 40px);
+  display: flex;
+  justify-content: space-between;
+}
+
+/* 閉じるボタン */
+#closeModal,
+#prevMessage,
+#nextMessage {
+  position: absolute; /* modalControls内で位置指定 */
+  background: #fff;
+  color: #1a1a1a;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 1.5em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  z-index: 10;
+}
+
+#closeModal {
+  top: 15px;
+  right: 95px;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 1.7em;
+}
+
+/* 前へ・次へボタン */
+.nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #fff;
+  color: #fff;
+  border: 2px solid#fff;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 2em;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.nav-btn:hover {
+  background-color: #fff;
+  color: #1a1a1a;
+}
+
+#prevMessage {
+  left: 10px;
+}
+#nextMessage {
+  right: 10px;
+}
+
+/* メッセージのスタイルは変更なし */
+.title-style {
+  font-size: 2.2em;
+  font-weight: 800;
+  line-height: 1.6;
+  margin-bottom: 40px;
+  color: #ffffff;
+  letter-spacing: 1px;
+  text-align: center;
+}
+.message-style {
+  font-size: 1.6em;
+  font-style: italic;
+  color: #aaaaaa;
+  margin-bottom: 10px;
+  position: relative;
+  padding: 0 30px;
+}
+
+.author-style {
+  font-size: 1.3em;
+  color: #fff;
+  font-weight: 600;
+  margin-top: 30px;
+  border-top: 1px solid rgba(255, 215, 0, 0.3);
+  padding-top: 10px;
+  text-align: center;
+}
+
+/* アニメーション定義 */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,187 @@
+/* SCSSの要素をベースとしたシンプルでかっこいいデザイン */
+:root {
+  --color-bg-dark: #1a1a1a;
+  --color-bg-light: #333333;
+  --color-accent: #fff; /* ゴールド */
+  --color-text-light: #f0f0f0;
+  --color-text-sub: #aaaaaa;
+}
+
+body {
+  // display: flex;
+  // flex-direction: column;
+  // align-items: center;
+  // min-height: 100vh;
+  // margin: 0;
+  // background: linear-gradient(135deg, var(--color-bg-dark) 0%, var(--color-bg-light) 100%);
+  // color: var(--color-text-light);
+  // font-family: 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+}
+.top-body {
+  padding-top: 100px;
+}
+
+.hub-title {
+  color: var(--color-accent);
+  margin-bottom: 50px;
+  font-size: 3em;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+.top-main {
+  text-align: left;
+
+  background-image: url(../img/genger06.png);
+  width: 100%;
+  height: calc(100vh - 100px);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  position: relative;
+
+  &__title {
+    position: absolute;
+    left: 50px;
+    bottom: 150px;
+    background-color: #fff;
+    color: rgba(23, 25, 76, 1);
+    padding: 5px 5px;
+    font-size: 50px;
+    font-weight: bold;
+    display: inline-block;
+  }
+  &__text {
+    position: absolute;
+    left: 50px;
+    bottom: 80px;
+    display: inline-block;
+    background-color: #fff;
+    color: rgba(23, 25, 76, 1);
+    padding: 5px 5px;
+    font-size: 30px;
+    font-weight: 600;
+  }
+}
+
+/* 3列グリッドコンテナ */
+.hub-grid {
+  width: 90%;
+  max-width: 1200px;
+  display: grid;
+  /* 基本は3列、画面幅に応じて調整 */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  list-style: none;
+  padding: 100px 0 300px;
+//   margin-top: 100px;
+}
+
+/* グリッドアイテム（各ページへのリンク） */
+.hub-item {
+  display: block;
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.6);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-decoration: none; /* リンクの下線を消す */
+  color: rgba(23, 25, 76, 1);
+  border: 2px solid transparent;
+
+  img {
+    aspect-ratio: 1/1;
+    width: 100%;
+    object-fit: cover;
+  }
+}
+
+.hub-item:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgb(255, 255, 255),
+    0 5px 10px rgba(255, 255, 255, 0.8);
+  border-color: var(--color-accent);
+}
+
+.hub-item__thumbnail {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  opacity: 0.8; /* やや暗くしてタイトルを際立たせる */
+  transition: opacity 0.3s;
+}
+
+.hub-item:hover .hub-item__thumbnail {
+  opacity: 1;
+}
+
+.hub-item__info {
+  padding: 15px;
+  text-align: center;
+}
+
+.hub-item__title {
+  font-size: 1.4em;
+  font-weight: bold;
+  color: rgba(23, 25, 76, 1);
+  margin: 0;
+}
+
+.hub-item__description {
+  font-size: 0.9em;
+  color: rgba(23, 25, 76, 1);
+  margin-top: 5px;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .hub-grid {
+    grid-template-columns: 1fr; /* スマホでは1列表示 */
+  }
+}
+
+.top-under {
+    &Wrap{
+        background-color: rgba(23, 25, 76, 1);
+        width: 100%;
+        padding: 100px 0;
+    }
+  margin: 0 auto ;
+  width: 90%;
+  max-width: 1200px;
+  &__text {
+    font-size: 25px;
+    line-height: 2;
+
+    font-family: "Noto Serif JP", serif;
+  }
+
+  &Img {
+    position: fixed;
+    top: 100px;
+    left: 0;
+    height: 100vh;
+    width: 100%;
+    z-index: -1;
+
+    &--sp{
+        display: none;
+        @media (max-width: 1019px){
+            display: block;
+        }
+    }
+
+    &--pc{
+        display: block;
+        @media (max-width: 1000px){
+            display: none;
+
+        }
+    }
+
+    img{
+        object-fit: cover;
+
+        width: 100%;
+        height: 100%;
+    }
+  }
+}
