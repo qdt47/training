@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>究極のモチベーションメッセージ</title>
+    <link rel="stylesheet" href="../css/message.css" />
+    <link rel="stylesheet" href="../css/header.css" />
+  </head>
+
+  <body class="message">
+    <header class="header">
+      <a href="index.html" class="header__logo"> QDT47 </a>
+      <div id="menuToggle" class="menu-toggle">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </div>
+    </header>
+    <nav id="sideMenu" class="side-menu">
+      <ul class="side-menu__list">
+        <li class="side-menu__item"><a href="index.html">🏡 ホーム</a></li>
+        <li class="side-menu__item">
+          <a href="0.5s.html">⏱️ 0.5秒毎カウント</a>
+        </li>
+        <li class="side-menu__item">
+          <a href="0.8s.html">⏱️ 0.8秒毎カウント</a>
+        </li>
+        <li class="side-menu__item"><a href="1s.html">⏱️ 1秒毎カウント</a></li>
+        <li class="side-menu__item">
+          <a href="1-5s.html">⏱️ 1.5秒毎カウント</a>
+        </li>
+        <li class="side-menu__item"><a href="2s.html">⏱️ 2秒毎カウント</a></li>
+        <li class="side-menu__item"><a href="3s.html">⏱️ 3秒毎カウント</a></li>
+        <li class="side-menu__item">
+          <a href="count.html">⏱️ 秒数カウントメイン</a>
+        </li>
+        <li class="side-menu__item">
+          <a href="message.html">💬 奮い立つ名言集</a>
+        </li>
+        <li class="side-menu__item">
+          <a href="movie.html">💪 やる気UP動画</a>
+        </li>
+      </ul>
+    </nav>
+    <h1 class="message-h1">メッセージ</h1>
+
+    <ul id="indexList"></ul>
+
+    <div id="modal">
+      <div id="modal__inner">
+        <div id="motivationContainerWrap">
+          <div id="motivationContainer">
+            
+            <p id="titleText" class="title-style"></p>
+            <p id="motivationalMessage" class="message-style"></p>
+            <p id="quoteAuthor" class="author-style"></p>
+          </div>
+          <button id="closeModal">×</button>
+          <button id="prevMessage" class="nav-btn">←</button>
+          <button id="nextMessage" class="nav-btn">→</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // やる気が出ない時用のメッセージリスト
+      const motivationalMessages = [
+        {
+          title:
+            "小さいことを重ねることが、とんでもないところへ行くただ一つの道",
+          message:
+            "誰にでもできるような当たり前のことを、誰も真似できないくらい徹底して続けよう",
+          author: "イチロー",
+        },
+        {
+          title: "モチベーションが高い時に一気に稼ぎ、低い時も最低限維持する",
+          message:
+            "高い時にやるの当たり前、せっかくモチベあるなら稼ぐ。そして低い時も最低限。これが継続の鍵",
+          author: "西村太河",
+        },
+        {
+          title: "その1秒を削りだせ",
+          message:
+            "このスローガンは、2011年の箱根駅伝で早稲田大学にわずか21秒差で敗れた東洋大学の酒井俊幸監督が、当時の選手たちから出た「全員が1秒、1秒を大切にしていれば…」という言葉を元に、チームスローガンとして完成させたものです。「1秒」という具体的な数値と、「その」という抽象的な指示語を組み合わせることで、選手一人ひとりが「誰のため、何のための1秒か」を考え、自己犠牲とチームへの貢献という意味合いを深く持つようになりました。",
+          author: "東洋大学陸上競技部",
+        },
+        {
+          title: "その１回を削りだせ",
+          message:
+            "たった1回。されど1回。ただ、勝負の世界では、そのたった1回が勝者と敗者の明暗を分ける。であるならば、日々、その一回を掴み取るために、全力を尽くしてトレーニングしようではないか。",
+          author: "清水大河",
+        },
+        {
+          title:
+            "今日できることを今日やらないやつは、明日になったって出来やしねぇんだよ。",
+          message:
+            "できる状況にあるのにやらないのはただのサボり。論理的にやらない理由ないならGO。感情に負けてやらないのはなし",
+          author: "茂野吾郎",
+        },
+        {
+          title: "俺にはSASUKEしかないんですよ",
+          message: "俺たちには予選会しかないんですよ",
+          author: "山田勝己",
+        },
+        {
+          title: "準備というのは、言い訳をなくすためにある。",
+          message:
+            "言い訳しないくらいトレーニング積もう。そして、結果がどうであれ、自分自身を納得させられる境地を目指そう",
+          author: "イチロー",
+        },
+        {
+          title:
+            "練習は嘘をつかないって言葉があるけど、頭を使って練習しないと普通に嘘つくよ",
+          message:
+            "闇雲な努力は非効率であり、目標達成のためには、方向性や方法を常に考え、修正し続けることが不可欠である。要はしっかり考えて努力しろよってこと",
+          author: "ダルビッシュ有",
+        },
+        {
+          title: "ゴミは人が落とした運。ゴミを拾うことで運を拾う。",
+          message:
+            "正直、運とか信じていないし、どうでもいい。ただ、汚い街より綺麗な街の方がいいし、今俺が拾わなければ、誰かが拾うことになる。であるのならば、余裕がある時くらいは拾おうじゃないか。もしそれで本当に運が貯まるのなら、これほどの一石二鳥はない。",
+          author: "大谷翔平",
+        },
+        {
+          title:
+            "心が変われば行動が変わる。行動が変われば習慣が変わる。習慣が変われば人格が変わる。人格が変われば運命が変わる",
+          message:
+            "心を変えるためには、日々そのことを考え、変えようと思い続けることが大事なのでは",
+          author: "ウィリアム・ジェームズ",
+        },
+        {
+          title: "敵は自分やと思っている。妥協が最大の敵やね。それにつきる。",
+          message:
+            "妥協しないために、自分を追い込む。自分を追い込むために、強気な発言をして逃げ道をなくす。これが本田のやり方。素晴らしい。感謝の腕立て伏せとかもこれだな。",
+          author: "本田圭佑",
+        },
+        {
+          title: "勝者のメンタリティ",
+          message:
+            "● 勝者は「見つけよう」と言う。敗者は「誰も知らない」と諦める。\n" +
+            "● 勝者はミスをした時「自分が悪い」と言い、敗者は「自分のせいではない」と言う。\n" +
+            "● 勝者は敗北を恐れない。\n" +
+            "● 勝者は努力して時間をつくる。敗者は「忙しい」と言って必要なことに手が回らない。\n" +
+            "● 勝者は大きな問題も細かく分解して解決する。敗者は小さな問題をたくさん抱え、解決できなくする。\n" +
+            "● 勝者は正面から取り組む。敗者は回り道をしたあげく、解決できない。\n" +
+            "● 勝者は良いプレーで前の失敗を償うが、敗者は「すまない」と言って同じ失敗を繰り返す。\n" +
+            "● 勝者は「戦う対象」と「妥協する対象」を知っている。敗者は安易な妥協をし、価値のないことで戦う。\n" +
+            "● 勝者は敗北から学ぶ。敗者は新しいことを試みず、「失敗しないこと」だけを学ぶ。\n" +
+            "● 勝者はすでに高いレベルでも「もっと良くなりたい」と言い、敗者はそのレベルでもないのに「他の人ほど悪くない」と言う。\n" +
+            "● 勝者は聞く耳を持つ。敗者は喋る番を待つ。\n" +
+            "● 勝者は説明する。敗者は言い訳をする。\n" +
+            "● 勝者は周りの雰囲気に敏感だが、敗者は自分の感情にだけ敏感である。\n" +
+            "● 勝者は強いが故に寛大になれるが、敗者には臆病と横暴とが交互に現れる。\n" +
+            "● 勝者は自分より優れた人を尊敬し、彼らから学ぼうとする。敗者は彼らに腹を立て、粗探しをしようとする。\n" +
+            "● 勝者は実行する。敗者は約束だけをする。\n" +
+            "● 勝者は「もっと良い方法があるはずだ」と言う。敗者は「今までやってきた以外方法はない」と言う。\n" +
+            "● 勝者は自分のペースを知っている。敗者はヒステリックに動き回るか、だらだら動くかの二つのペースしか持っていない。",
+          author: "？？？？",
+        },
+      ];
+
+      let currentModalIndex = 0; // ポップアップで現在表示中のメッセージのインデックス
+
+      /**
+       * メッセージ詳細をポップアップに表示する関数
+       * @param {number} index - 表示するメッセージのインデックス
+       */
+      function displayMessageInModal(index) {
+        currentModalIndex = index;
+        const selected = motivationalMessages[index];
+
+        // title を表示
+        document.getElementById("titleText").textContent = selected.title;
+
+        // message を表示 (改行を<br>に変換し、innerHTMLで挿入する)
+        const messageElement = document.getElementById("motivationalMessage");
+        const formattedMessage = selected.message.replace(/\n/g, "<br>");
+        messageElement.innerHTML = formattedMessage;
+
+        // author を表示
+        document.getElementById(
+          "quoteAuthor"
+        ).textContent = `- ${selected.author} -`;
+
+        document.getElementById("modal").style.display = "flex"; // モーダルを表示
+      }
+
+      // 次のメッセージへ移動
+      function nextMessage() {
+        const nextIndex = (currentModalIndex + 1) % motivationalMessages.length;
+        displayMessageInModal(nextIndex);
+      }
+
+      // 前のメッセージへ移動
+      function prevMessage() {
+        let prevIndex = currentModalIndex - 1;
+        if (prevIndex < 0) {
+          prevIndex = motivationalMessages.length - 1;
+        }
+        displayMessageInModal(prevIndex);
+      }
+
+      // ページロード時の初期設定
+      document.addEventListener("DOMContentLoaded", () => {
+        const indexList = document.getElementById("indexList");
+
+        // 1. 一覧リストの作成
+        motivationalMessages.forEach((item, index) => {
+          const listItem = document.createElement("li");
+          // タイトルと著者名をリスト項目に表示
+          listItem.textContent = `${item.title} （${item.author}）`;
+          listItem.classList.add("index-item");
+
+          // クリックイベントでモーダルを表示
+          listItem.addEventListener("click", () => {
+            displayMessageInModal(index);
+          });
+
+          indexList.appendChild(listItem);
+        });
+
+        // 2. モーダル（ポップアップ）の操作ボタン設定
+        document.getElementById("closeModal").addEventListener("click", () => {
+          document.getElementById("modal").style.display = "none"; // モーダルを閉じる
+        });
+        document
+          .getElementById("nextMessage")
+          .addEventListener("click", nextMessage);
+        document
+          .getElementById("prevMessage")
+          .addEventListener("click", prevMessage);
+      });
+    </script>
+    <script src="../js/script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>秒数カウントアップ（読み上げ付き）</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/header.css" />
+  </head>
+  <body>
+    <header class="header">
+      <a href="index.html" class="header__logo"> QDT47 </a>
+      <div id="menuToggle" class="menu-toggle">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </div>
+    </header>
+    <nav id="sideMenu" class="side-menu">
+      <ul class="side-menu__list">
+        <li class="side-menu__item"><a href="index.html">🏡 ホーム</a></li>
+        <li class="side-menu__item">
+          <a href="0.5s.html">⏱️ 0.5秒毎カウント</a>
+        </li>
+        <li class="side-menu__item">
+          <a href="0.8s.html">⏱️ 0.8秒毎カウント</a>
+        </li>
+        <li class="side-menu__item"><a href="1s.html">⏱️ 1秒毎カウント</a></li>
+        <li class="side-menu__item">
+          <a href="1-5s.html">⏱️ 1.5秒毎カウント</a>
+        </li>
+        <li class="side-menu__item"><a href="2s.html">⏱️ 2秒毎カウント</a></li>
+        <li class="side-menu__item"><a href="3s.html">⏱️ 3秒毎カウント</a></li>
+        <li class="side-menu__item">
+          <a href="count.html">⏱️ 秒数カウントメイン</a>
+        </li>
+        <li class="side-menu__item">
+          <a href="message.html">💬 奮い立つ名言集</a>
+        </li>
+        <li class="side-menu__item">
+          <a href="movie.html">💪 やる気UP動画</a>
+        </li>
+      </ul>
+    </nav>
+    <h1>連続カウント（1秒ごと）</h1>
+    <p id="counter">00:00</p>
+    <div>
+      <button id="startBtn">スタート</button>
+      <button id="stopBtn">ストップ</button>
+      <button id="resetBtn">リセット</button>
+    </div>
+
+    <script>
+      let totalSeconds = 0;
+      let intervalId;
+      let countdownId; // カウントダウン用のIDを追加
+      let isRunning = false;
+      const COUNTER_RATE = 2.0; // 読み上げ速度
+
+      // 音声読み上げ関数
+      function speak(text) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = "ja-JP";
+        utterance.rate = COUNTER_RATE; // 高速で読み上げ
+        speechSynthesis.speak(utterance);
+      }
+
+      // 秒数をフォーマットして読み上げる関数 (1分経過後は「分 秒」形式)
+      function speakTime(seconds) {
+        const h = Math.floor(seconds / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+        const s = seconds % 60;
+
+        let textToSpeak = "";
+
+        if (h > 0) {
+          textToSpeak = `${h}時間 ${m}分 ${s}秒`;
+        } else if (m > 0) {
+          // 1分以上の場合：「X分。 Y」のように、間（句点）を空けて高速に読み上げ
+          textToSpeak = `${m}分。 ${s}`;
+        } else {
+          // 1分未満の場合：秒数をそのまま読み上げ
+          textToSpeak = `${s}`;
+        }
+
+        speechSynthesis.cancel();
+        speak(textToSpeak);
+      }
+
+      // 画面表示をフォーマットする関数 (H:MM:SS または MM:SS)
+      function formatTime(seconds) {
+        const h = Math.floor(seconds / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+        const s = seconds % 60;
+        const pad = (num) => String(num).padStart(2, "0");
+
+        if (h > 0) {
+          return `${h}:${pad(m)}:${pad(s)}`;
+        } else {
+          return `${pad(m)}:${pad(s)}`;
+        }
+      }
+
+      // ★★★ カウントアップ処理本体 ★★★
+      function startInterval() {
+        totalSeconds = 0;
+        document.getElementById("counter").textContent =
+          formatTime(totalSeconds);
+        speak("スタート！");
+        isRunning = true;
+
+        intervalId = setInterval(() => {
+          totalSeconds++;
+          document.getElementById("counter").textContent =
+            formatTime(totalSeconds);
+          speakTime(totalSeconds);
+        }, 1000);
+      }
+
+      // ★★★ スタートボタン押下時のメイン処理 ★★★
+      function startCounting() {
+        if (isRunning) return;
+
+        clearInterval(intervalId);
+        clearInterval(countdownId);
+        speechSynthesis.cancel();
+
+        // 1. カウントダウンの開始を宣言
+        speak("10秒後にスタートします");
+
+        // 2. 0.5秒後からカウントダウン開始
+        setTimeout(() => {
+          let countdown = 10;
+          document.getElementById("counter").textContent = countdown;
+          speak(countdown); // 最初の「10」を読み上げ
+
+          countdownId = setInterval(() => {
+            countdown--;
+            document.getElementById("counter").textContent = countdown;
+
+            if (countdown > 0) {
+              speak(countdown);
+            } else {
+              clearInterval(countdownId);
+              // カウントダウン終了後、メインのカウントアップを開始
+              startInterval();
+            }
+          }, 1000);
+        }, 500); // 0.5秒遅延
+      }
+
+      function stopCounting() {
+        if (!isRunning) return;
+
+        clearInterval(intervalId);
+        clearInterval(countdownId); // カウントダウン中も停止できるように
+        isRunning = false;
+
+        // カウントアップ中だった場合、最終時間を読み上げる
+        if (totalSeconds > 0) {
+          speak(`ストップ。現在のタイムは ${formatTime(totalSeconds)} です。`);
+        } else {
+          speechSynthesis.cancel(); // カウントダウン中なら単に停止
+        }
+      }
+
+      function resetCounting() {
+        clearInterval(intervalId);
+        clearInterval(countdownId);
+        speechSynthesis.cancel();
+        isRunning = false;
+        totalSeconds = 0;
+        document.getElementById("counter").textContent = "00:00";
+      }
+
+      // イベントリスナーの設定
+      document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("counter").textContent =
+          formatTime(totalSeconds);
+        document
+          .getElementById("startBtn")
+          .addEventListener("click", startCounting);
+        document
+          .getElementById("stopBtn")
+          .addEventListener("click", stopCounting);
+        document
+          .getElementById("resetBtn")
+          .addEventListener("click", resetCounting);
+      });
+    </script>
+    <script src="../js/script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>カウントアップ</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/header.css" />
+</head>
+<body>
+  <header class="header">
+    <a href="index.html" class="header__logo">
+      TRAIN<span style="color: white">HUB</span>
+    </a>
+    <div id="menuToggle" class="menu-toggle">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+  </header>
+  <h1>カウントアップ</h1>
+  <p id="counter">0</p>
+  <div>
+    <button id="startBtn">スタート</button>
+    <button id="stopBtn">ストップ</button>
+    <button id="resetBtn">リセット</button>
+  </div>
+
+  <script>
+    let counter = 0;
+    let intervalId;
+    let countdownId;
+
+    function speak(text) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'ja-JP';
+      speechSynthesis.speak(utterance);
+    }
+
+    function startCounting() {
+      clearInterval(intervalId);
+      clearInterval(countdownId);
+      speechSynthesis.cancel();
+      counter = 0;
+      document.getElementById('counter').textContent = "10"; // 最初に10を表示
+
+      // まず「10秒後にスタートします」と発声
+      speak("10秒後にスタートします");
+
+      // 2秒待ってからカウントダウンを開始
+      setTimeout(() => {
+        let countdown = 10;
+        countdownId = setInterval(() => {
+          document.getElementById('counter').textContent = countdown;
+          speak(countdown);
+
+          countdown--;
+          if (countdown < 0) {
+            clearInterval(countdownId);
+            speak("スタート！");
+            counter = 0;
+            document.getElementById('counter').textContent = counter;
+
+            // カウントアップ開始
+            intervalId = setInterval(() => {
+              counter++;
+              document.getElementById('counter').textContent = counter;
+              speak(counter);
+              if (counter >= 300) {
+                clearInterval(intervalId);
+              }
+            }, 1500);
+          }
+        }, 1000);
+      }, 2000); // ←ここで2秒の間を置く
+    }
+
+    function stopCounting() {
+      clearInterval(intervalId);
+      clearInterval(countdownId);
+      speechSynthesis.cancel();
+    }
+
+    function resetCounting() {
+      clearInterval(intervalId);
+      clearInterval(countdownId);
+      speechSynthesis.cancel();
+      counter = 0;
+      document.getElementById('counter').textContent = counter;
+    }
+
+    document.getElementById('startBtn').addEventListener('click', startCounting);
+    document.getElementById('stopBtn').addEventListener('click', stopCounting);
+    document.getElementById('resetBtn').addEventListener('click', resetCounting);
+  </script>
+</body>
+</html>
