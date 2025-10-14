@@ -40,6 +40,11 @@
   font-weight: bold;
   display: inline-block;
 }
+@media (max-width: 1009px) {
+  .top-main__title {
+    bottom: 400px;
+  }
+}
 .top-main__text {
   position: absolute;
   left: 50px;
@@ -51,6 +56,11 @@
   font-size: 30px;
   font-weight: 600;
 }
+@media (max-width: 1000px) {
+  .top-main__text {
+    bottom: 320px;
+  }
+}
 
 /* 3列グリッドコンテナ */
 .hub-grid {
@@ -61,7 +71,12 @@
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 30px;
   list-style: none;
-  padding: 100px 0 300px;
+  padding: 100px 0 500px;
+}
+@media (max-width: 1000px) {
+  .hub-grid {
+    padding: 100px 0 1000px;
+  }
 }
 
 /* グリッドアイテム（各ページへのリンク） */

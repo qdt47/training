@@ -102,6 +102,9 @@ h1 {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
 }
+#motivationContainer#motivationContainer::-webkit-scrollbar {
+  display: none;
+}
 
 /* ボタンコンテナ */
 #modalControls {
