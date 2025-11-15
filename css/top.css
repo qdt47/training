@@ -40,7 +40,7 @@
   font-weight: bold;
   display: inline-block;
 }
-@media (max-width: 1009px) {
+@media (max-width: 1000px) {
   .top-main__title {
     bottom: 400px;
   }
