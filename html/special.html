@@ -43,73 +43,107 @@
       </ul>
     </nav>
     <h1>カウントアップ</h1>
-    <div class="sub-title">ver.0.8</div>
+    <div class="sub-title">special</div>
     <p id="counter">0</p>
     <div>
       <button id="startBtn">スタート</button>
       <button id="stopBtn">ストップ</button>
       <button id="resetBtn">リセット</button>
     </div>
+    <div style="margin-top: 10px">
+      <button onclick="skipTo(500)">⏩ 500へ</button>
+      <button onclick="skipTo(650)">⏩ 650へ</button>
+      <button onclick="skipTo(1000)">⏩ 1000へ</button>
+    </div>
 
     <script>
       let counter = 0;
-      let intervalId;
+      let timeoutId; // intervalIdから変更
       let countdownId;
-      const SPEECH_RATE = 3.5;
 
       function speak(text) {
+        // 次の読み上げの邪魔にならないよう、前の音声をキャンセル
+        speechSynthesis.cancel();
+
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = "ja-JP";
-        utterance.rate = SPEECH_RATE;
+
+        // 1000を超えたら速度を上げる（1.8〜2.0くらいが1秒間隔に適しています）
+        if (counter > 1000) {
+          utterance.rate = 2.0; // 1001以降は倍速
+        } else {
+          utterance.rate = 1.0; // 1000までは少しだけ聞き取りやすく
+        }
+
         speechSynthesis.speak(utterance);
       }
 
+      // カウントアップのロジックを分離
+      function countUp() {
+        counter++;
+        document.getElementById("counter").textContent = counter;
+        speak(counter);
+
+        // 2000に達したら終了
+        if (counter >= 2000) {
+          clearTimeout(timeoutId);
+          return;
+        }
+
+        // カウント数に応じて次の実行までの待ち時間を決定
+        let delay;
+        if (counter <= 500) {
+          delay = 2000; // 500まで2秒
+        } else if (counter <= 650) {
+          delay = 1500; // 501〜650は1.5秒
+        } else if (counter <= 1000) {
+          delay = 2000; // 651〜1000は2秒
+        } else {
+          delay = 1000; // 1001以降は1秒
+        }
+
+        // 次のカウントを予約
+        timeoutId = setTimeout(countUp, delay);
+      }
+
       function startCounting() {
-        clearInterval(intervalId);
+        clearTimeout(timeoutId);
         clearInterval(countdownId);
         speechSynthesis.cancel();
-        counter = 0;
-        document.getElementById("counter").textContent = "10"; // 最初に10を表示
 
-        // まず「10秒後にスタートします」と発声
+        counter = 0;
+        document.getElementById("counter").textContent = "10";
+
         speak("10秒後にスタートします");
 
-        // 2秒待ってからカウントダウンを開始
         setTimeout(() => {
           let countdown = 10;
           countdownId = setInterval(() => {
-            document.getElementById("counter").textContent = countdown;
-            speak(countdown);
-
-            countdown--;
-            if (countdown < 0) {
+            if (countdown > 0) {
+              document.getElementById("counter").textContent = countdown;
+              speak(countdown);
+              countdown--;
+            } else {
               clearInterval(countdownId);
               speak("スタート！");
               counter = 0;
               document.getElementById("counter").textContent = counter;
 
-              // カウントアップ開始
-              intervalId = setInterval(() => {
-                counter++;
-                document.getElementById("counter").textContent = counter;
-                speak(counter);
-                if (counter >= 1500) {
-                  clearInterval(intervalId);
-                }
-              }, 800);
+              // 初回のカウントアップを開始
+              timeoutId = setTimeout(countUp, 2000);
             }
           }, 1000);
-        }, 2000); // ←ここで2秒の間を置く
+        }, 2000);
       }
 
       function stopCounting() {
-        clearInterval(intervalId);
+        clearTimeout(timeoutId);
         clearInterval(countdownId);
         speechSynthesis.cancel();
       }
 
       function resetCounting() {
-        clearInterval(intervalId);
+        clearTimeout(timeoutId);
         clearInterval(countdownId);
         speechSynthesis.cancel();
         counter = 0;
@@ -125,6 +159,24 @@
       document
         .getElementById("resetBtn")
         .addEventListener("click", resetCounting);
+
+      // 指定の数値までスキップする関数
+      function skipTo(targetValue) {
+        // 実行中のタイマーをすべて止める
+        clearTimeout(timeoutId);
+        clearInterval(countdownId);
+        speechSynthesis.cancel();
+
+        // カウントを更新して表示を反映
+        counter = targetValue;
+        document.getElementById("counter").textContent = counter;
+
+        // speak(counter + "にスキップしました");
+
+        // スキップした直後から、その数値に応じた速度で再開
+        // 1秒待ってから再開させると音声が被りにくくなります
+        timeoutId = setTimeout(countUp, 1000);
+      }
     </script>
     <script src="../js/script.js"></script>
   </body>
